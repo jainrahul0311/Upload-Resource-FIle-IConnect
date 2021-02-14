@@ -49,6 +49,8 @@ public class ResourceFileUpdate implements IConnect {
         JSONObject output = new JSONObject();
         long resourceFileRecordID = -1;
 
+        enableDebug = request.getParameterMap().containsKey("enableDebug") && request.getParameter("enableDebug").equals("true");
+
         doDebug("Execution Started");
         String fullUrl = request.getPathInfo();
         doDebug("Full URL : " + fullUrl);
@@ -100,8 +102,6 @@ public class ResourceFileUpdate implements IConnect {
             content.setFileName(resourceName + ".jar");
 
             try {
-
-
                 Response upload = tririgaWS.upload(content);
                 if (!upload.getStatus().equals("Success")) {
                     throw new Exception("Upload Response of Trirga is Failed");
@@ -125,7 +125,6 @@ public class ResourceFileUpdate implements IConnect {
                 );
                 if (triSave.isAnyFailed()) {
                     ERROR = "Failed to Save the Resource File, with value = " + triSave.getResponseHelpers()[0].getValue();
-                    break label_001;
                 } else {
                     doDebug("Successfully Triggered Save on Resource File!!");
                     doDebug("Resource Found SpecID : " + resourceFileRecordID);
@@ -133,7 +132,6 @@ public class ResourceFileUpdate implements IConnect {
             } catch (Exception e) {
                 ERROR = "Exception happened while trying to Trigger Save on Resource File.";
                 doDebug("Exception on Triggering Save : "+e.getMessage());
-                break label_001;
             }
         }
 
